@@ -29,10 +29,10 @@ remote_for_local() {
 }
 
 download_remote_to_local() {
-	local _playlist_max _remote_tracknum _local_tracknum
+	local _playlist_max _local_tracknum _remote_tracknum
 	_playlist_max="$1"; shift
-	_remote_tracknum="$1"; shift
 	_local_tracknum="$1"; shift
+	_remote_tracknum=$(remote_for_local ${_local_tracknum})
 
 	[ ${_remote_tracknum} -gt ${_playlist_max} ] && return 77
 
@@ -81,7 +81,7 @@ tag_new_mp3_files() {
 }
 
 main() {
-	local _playlist_max _local_to_try _remote_to_try
+	local _playlist_max _local_to_try
 	if [ $# -eq 2 ]; then
 		_local_to_try="$1"
 		_playlist_max="$2"
@@ -89,11 +89,9 @@ main() {
 		_local_to_try=$(expr 1 + $(highest_local_tracknum))
 		_playlist_max=$(playlist_length)
 	fi
-	_remote_to_try=$(remote_for_local ${_local_to_try})
 
-	while download_remote_to_local ${_playlist_max} ${_remote_to_try} ${_local_to_try}; do
+	while download_remote_to_local ${_playlist_max} ${_local_to_try}; do
 		_local_to_try=$(expr 1 + ${_local_to_try})
-		_remote_to_try=$(remote_for_local ${_local_to_try})
 	done
 
 	tag_new_mp3_files
