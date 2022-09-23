@@ -61,7 +61,7 @@ composer_lookup() {
 		Mompou)		echo "Mompou, Federico"			;;
 		Schumann)	echo "Schumann, Robert"			;;
 		Scriabin)	echo "Scriabin, Alexander Nikolayevich"	;;
-		*)		echo >&2 "ERROR: add ${_composer_surname}"
+		*)		echo >&2 "ERROR: add '${_composer_surname}'"
 				exit 77					;;
 	esac
 }
@@ -98,8 +98,8 @@ main() {
 		_local_wanted=$(expr 1 + ${_local_wanted})
 	done
 
-	for i in $(ls *.mp3 2>/dev/null); do
-		tag_new_mp3 "${i}"
+	for i in *.mp3; do
+		[ "${i}" != '.mp3' ] && tag_new_mp3 "${i}"
 	done
 }
 
