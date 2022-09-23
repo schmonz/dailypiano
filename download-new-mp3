@@ -3,6 +3,7 @@
 set -e
 
 YOUTUBE_PLAYLIST='https://youtube.com/playlist?list=PLkuryjnRFclQJqoIVpk9W9-eIRswejo-R'
+YOUTUBE_NONEXISTENT_TRACK=98
 LOCALMUSIC_DIRECTORY="${HOME}/Music/iTunes/iTunes Music/Schleier, Amitai/Daily Piano Miniatures"
 
 playlist_length() {
@@ -20,7 +21,7 @@ highest_local_tracknum() {
 remote_for_local() {
 	local _tracknum
 	_tracknum="$1"; shift
-	if [ "${_tracknum}" -ge 98 ]; then
+	if [ "${_tracknum}" -ge ${YOUTUBE_NONEXISTENT_TRACK} ]; then
 		echo $(expr 1 + ${_tracknum})
 	else
 		echo ${_tracknum}
