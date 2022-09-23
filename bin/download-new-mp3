@@ -3,6 +3,13 @@
 set -e
 unset CDPATH
 
+# Typical usage:
+# 1. Run this script with no arguments
+# 2. Copy (and then delete) any downloaded MP3 files into Music.app
+# 3. Run this script with no arguments, again
+# 4. Observe new web-named MP3 files in `audio/`
+# 5. `git add audio && git commit -m 'Add latest music.' && git push`
+
 YOUTUBE_PLAYLIST='https://youtube.com/playlist?list=PLkuryjnRFclQJqoIVpk9W9-eIRswejo-R'
 YOUTUBE_NONEXISTENT_TRACK=98
 LOCALMUSIC_DIRECTORY="${HOME}/Music/iTunes/iTunes Music/Schleier, Amitai/Daily Piano Miniatures"
