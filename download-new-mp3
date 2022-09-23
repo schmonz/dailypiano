@@ -81,15 +81,14 @@ tag_new_mp3_files() {
 }
 
 main() {
-	local _playlist_max _local_latest _local_to_try _remote_to_try
+	local _playlist_max _local_to_try _remote_to_try
 	if [ $# -eq 2 ]; then
 		_playlist_max="$2"
-		_local_latest="$1"
+		_local_to_try="$1"
 	else
 		_playlist_max=$(playlist_length)
-		_local_latest=$(highest_local_tracknum)
+		_local_to_try=$(expr 1 + $(highest_local_tracknum))
 	fi
-	_local_to_try=$(expr 1 + ${_local_latest})
 	_remote_to_try=$(remote_for_local ${_local_to_try})
 
 	while download_remote_to_local ${_playlist_max} ${_remote_to_try} ${_local_to_try}; do
