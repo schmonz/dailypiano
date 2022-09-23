@@ -1,10 +1,12 @@
 #!/bin/sh
 
 set -e
+unset CDPATH
 
 YOUTUBE_PLAYLIST='https://youtube.com/playlist?list=PLkuryjnRFclQJqoIVpk9W9-eIRswejo-R'
 YOUTUBE_NONEXISTENT_TRACK=98
 LOCALMUSIC_DIRECTORY="${HOME}/Music/iTunes/iTunes Music/Schleier, Amitai/Daily Piano Miniatures"
+DESTINATION=audio
 
 playlist_length() {
 	yt-dlp \
@@ -89,6 +91,8 @@ main() {
 		_local_wanted=$(expr 1 + $(highest_local_tracknum))
 		_remote_maxindex=$(playlist_length)
 	fi
+
+	cd "$(dirname $0)/../${DESTINATION}"
 
 	while download_remote_to_local ${_remote_maxindex} ${_local_wanted}; do
 		_local_wanted=$(expr 1 + ${_local_wanted})
