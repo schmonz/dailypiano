@@ -1,0 +1,97 @@
+#!/bin/sh
+
+set -e
+
+YOUTUBE_PLAYLIST='https://youtube.com/playlist?list=PLkuryjnRFclQJqoIVpk9W9-eIRswejo-R'
+LOCALMUSIC_DIRECTORY="${HOME}/Music/iTunes/iTunes Music/Schleier, Amitai/Daily Piano Miniatures"
+
+playlist_length() {
+	yt-dlp \
+		--flat-playlist \
+		--dump-json \
+		${YOUTUBE_PLAYLIST} \
+	| jq .n_entries | sort -u
+}
+
+highest_local_tracknum() {
+	ls "${LOCALMUSIC_DIRECTORY}" | sort -n | tail -1 | awk '{print $1}'
+}
+
+remote_for_local() {
+	local _tracknum
+	_tracknum="$1"; shift
+	if [ "${_tracknum}" -ge 98 ]; then
+		echo $(expr 1 + ${_tracknum})
+	else
+		echo ${_tracknum}
+	fi
+}
+
+download_remote_to_local() {
+	local _playlist_max _remote_tracknum _local_tracknum
+	_playlist_max="$1"; shift
+	_remote_tracknum="$1"; shift
+	_local_tracknum="$1"; shift
+
+	[ ${_remote_tracknum} -gt ${_playlist_max} ] && return 77
+
+	yt-dlp \
+		--abort-on-error \
+		--playlist-items ${_remote_tracknum} \
+		-o "${_local_tracknum} %(title)s.%(ext)s" \
+		--extract-audio \
+		--audio-format mp3 \
+		"${YOUTUBE_PLAYLIST}"
+}
+
+composer_lookup() {
+	local _composer_surname
+	_composer_surname="$1"; shift
+	case "${_composer_surname}" in
+		Alkan)		echo "Alkan, Charles-Valentin"		;;
+		Bortkiewicz)	echo "Bortkevych, Serhiy Eduardovych"	;;
+		Bowen)		echo "Bowen, York"			;;
+		Catoire)	echo "Catoire, Georgy L'vovich"		;;
+		Grieg)		echo "Grieg, Edvard"			;;
+		Medtner)	echo "Medtner, Nikolai Karlovich"	;;
+		Mompou)		echo "Mompou, Federico"			;;
+		Schumann)	echo "Schumann, Robert"			;;
+		Scriabin)	echo "Scriabin, Alexander Nikolayevich"	;;
+		*)		echo "${_composer_surname}"		;;
+	esac
+}
+
+tag_new_mp3_files() {
+	local _tracknum _composer_surname _composer_fullname
+	for i in *.mp3; do
+		_tracknum=$(echo "$i" | awk '{print $1}')
+		_composer_surname=$(echo "$i" | awk '{print $2}')
+		_composer_fullname=$(composer_lookup "${_composer_surname}")
+		id3v2 \
+			--track "${_tracknum}" \
+			--TCOM "${_composer_fullname}" \
+			--artist "Schleier, Amitai" \
+			--album "Daily Piano Miniatures" \
+			--genre "32" \
+			--year "2022" \
+			"$i"
+		# XXX --APIC "/Users/schmonz/Documents/trees/schmonz.com/src/resume/images/santa_ponsa_face.jpg" \
+	done
+}
+
+main() {
+	playlist_max=$(playlist_length)
+	local_latest=$(highest_local_tracknum)
+	local_to_try=$(expr 1 + ${local_latest})
+	remote_to_try=$(remote_for_local ${local_to_try})
+
+	while download_remote_to_local ${playlist_max} ${remote_to_try} ${local_to_try}; do
+		local_to_try=$(expr 1 + ${local_to_try})
+		remote_to_try=$(remote_for_local ${local_to_try})
+	done
+
+	tag_new_mp3_files
+}
+
+main "$@"
+exit $?
