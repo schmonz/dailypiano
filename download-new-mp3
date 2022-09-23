@@ -77,7 +77,6 @@ tag_new_mp3_files() {
 			--genre "32" \
 			--year "2022" \
 			"$i"
-		# XXX --APIC "/Users/schmonz/Documents/trees/schmonz.com/src/resume/images/santa_ponsa_face.jpg" \
 	done
 }
 
