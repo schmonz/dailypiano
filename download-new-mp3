@@ -59,25 +59,25 @@ composer_lookup() {
 		Mompou)		echo "Mompou, Federico"			;;
 		Schumann)	echo "Schumann, Robert"			;;
 		Scriabin)	echo "Scriabin, Alexander Nikolayevich"	;;
-		*)		echo "${_composer_surname}"		;;
+		*)		echo >&2 "ERROR: add ${_composer_surname}"
+				exit 77					;;
 	esac
 }
 
-tag_new_mp3_files() {
-	local _tracknum _composer_surname _composer_fullname
-	for i in *.mp3; do
-		_tracknum=$(echo "$i" | awk '{print $1}')
-		_composer_surname=$(echo "$i" | awk '{print $2}')
-		_composer_fullname=$(composer_lookup "${_composer_surname}")
-		id3v2 \
-			--track "${_tracknum}" \
-			--TCOM "${_composer_fullname}" \
-			--artist "Schleier, Amitai" \
-			--album "Daily Piano Miniatures" \
-			--genre "32" \
-			--year "2022" \
-			"$i"
-	done
+tag_new_mp3() {
+	local _filename _tracknum _composer_surname _composer_fullname
+	_filename="$1"; shift
+	_tracknum=$(echo "${_filename}" | awk '{print $1}')
+	_composer_surname=$(echo "${_filename}" | awk '{print $2}')
+	_composer_fullname=$(composer_lookup "${_composer_surname}")
+	id3v2 \
+		--track "${_tracknum}" \
+		--TCOM "${_composer_fullname}" \
+		--artist "Schleier, Amitai" \
+		--album "Daily Piano Miniatures" \
+		--genre "32" \
+		--year "2022" \
+		"${_filename}"
 }
 
 main() {
@@ -94,7 +94,9 @@ main() {
 		_local_wanted=$(expr 1 + ${_local_wanted})
 	done
 
-	tag_new_mp3_files
+	for i in $(ls *.mp3 2>/dev/null); do
+		tag_new_mp3 "${i}"
+	done
 }
 
 main "$@"
