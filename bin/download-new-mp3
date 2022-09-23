@@ -99,7 +99,7 @@ main() {
 	done
 
 	for i in *.mp3; do
-		[ "${i}" != '.mp3' ] && tag_new_mp3 "${i}"
+		[ "${i}" != '*.mp3' ] && tag_new_mp3 "${i}"
 	done
 }
 
