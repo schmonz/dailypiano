@@ -23,6 +23,7 @@ sub asciify_all_known_stragglers {
 		'\x{e5}'	=> 'a',
 		'\x{f8}'	=> 'o',
 		'\x{153}'	=> 'oe',
+		'\x{f6}'	=> 'oe',
 	);
 
 	my $only_ascii = Encode::decode_utf8($not_only_ascii);
