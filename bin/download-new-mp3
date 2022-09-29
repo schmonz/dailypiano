@@ -92,7 +92,8 @@ tag_new_mp3() {
 
 copy_stably_from_music_app_to_subdirectory_for_web() {
 	local _destination
-	_destination=$(cd ${DESTINATION} && pwd)
+	mkdir -p "${DESTINATION}"
+	_destination=$(cd "${DESTINATION}" && pwd)
 
 	(cd "${LOCALMUSIC_DIRECTORY}"
 	for i in *.mp3; do
