@@ -1,0 +1,66 @@
+#!/opt/pkg/bin/perl
+
+use warnings;
+use strict;
+
+use utf8;
+
+use Encode;
+
+sub asciify_all_known_stragglers {
+	my $not_only_ascii = shift;
+
+	my %ascii_for = (
+		'\x{ff1a}'	=> ':',
+		'\x{e7}'	=> 'c',
+		'\x{f3}'	=> 'o',
+		'\x{cd}'	=> 'I',
+		'\x{e1}'	=> 'a',
+		'\x{e4}'	=> 'ae',
+		'\x{fc}'	=> 'ue',
+		'\x{e8}'	=> 'e',
+		'\x{e9}'	=> 'e',
+		'\x{e5}'	=> 'a',
+		'\x{f8}'	=> 'o',
+		'\x{153}'	=> 'oe',
+	);
+
+	my $only_ascii = Encode::decode_utf8($not_only_ascii);
+
+	for my $unicode (keys %ascii_for) {
+		$only_ascii =~ s/$unicode/$ascii_for{$unicode}/g;
+	}
+
+	return $only_ascii;
+}
+
+sub further_webify_filename {
+	my $filename = shift;
+
+	$filename =~ s/://g;
+	$filename =~ s/,//g;
+	$filename =~ s/\(//g;
+	$filename =~ s/\)//g;
+
+	$filename =~ s/Op\./Op/g;
+	$filename =~ s/No\./No/g;
+	$filename =~ s/#/No /g;
+	$filename =~ s/'/ /g;
+	$filename =~ s/ /-/g;
+	$filename =~ s/-\././g;
+
+	$filename =~ s/--/-/g;
+	$filename = lc($filename);
+
+	return $filename;
+}
+
+sub main {
+	my @messynames = @_;
+
+	for my $messyname (@messynames) {
+		print further_webify_filename(asciify_all_known_stragglers($messyname));
+	}
+}
+
+main(@ARGV);

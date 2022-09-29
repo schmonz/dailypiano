@@ -13,6 +13,7 @@ unset CDPATH
 YOUTUBE_PLAYLIST='https://youtube.com/playlist?list=PLkuryjnRFclQJqoIVpk9W9-eIRswejo-R'
 YOUTUBE_NONEXISTENT_TRACK=98
 LOCALMUSIC_DIRECTORY="${HOME}/Music/iTunes/iTunes Music/Schleier, Amitai/Daily Piano Miniatures"
+WEB_RENAMER="$(pwd)/$(dirname $0)/flatten-name-for-web-mp3"
 DESTINATION=audio
 
 playlist_length() {
@@ -89,6 +90,18 @@ tag_new_mp3() {
 		"${_filename}"
 }
 
+copy_stably_from_music_app_to_subdirectory_for_web() {
+	local _destination
+	_destination=$(cd ${DESTINATION} && pwd)
+
+	(cd "${LOCALMUSIC_DIRECTORY}"
+	for i in *.mp3; do
+		[ "${i}" == '*.mp3' ] && break
+		stable_web_filename=$(${WEB_RENAMER} "${i}")
+		cp -a "${i}" "${_destination}/${stable_web_filename}"
+	done)
+}
+
 main() {
 	local _remote_maxindex _local_wanted
 	if [ $# -eq 2 ]; then
@@ -99,15 +112,16 @@ main() {
 		_remote_maxindex=$(playlist_length)
 	fi
 
-	cd "$(dirname $0)/../${DESTINATION}"
-
 	while download_remote_to_local ${_remote_maxindex} ${_local_wanted}; do
 		_local_wanted=$(expr 1 + ${_local_wanted})
 	done
 
 	for i in *.mp3; do
-		[ "${i}" != '*.mp3' ] && tag_new_mp3 "${i}"
+		[ "${i}" == '*.mp3' ] && break
+		tag_new_mp3 "${i}"
 	done
+
+	copy_stably_from_music_app_to_subdirectory_for_web
 }
 
 main "$@"
