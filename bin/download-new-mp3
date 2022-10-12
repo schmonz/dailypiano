@@ -11,7 +11,6 @@ unset CDPATH
 # 5. `git add audio && git commit -m 'Add latest music.' && git push`
 
 YOUTUBE_PLAYLIST='https://youtube.com/playlist?list=PLkuryjnRFclQJqoIVpk9W9-eIRswejo-R'
-YOUTUBE_NONEXISTENT_TRACK=98
 LOCALMUSIC_DIRECTORY="${HOME}/Music/iTunes/iTunes Music/Schleier, Amitai/Daily Piano Miniatures"
 WEB_RENAMER="$(pwd)/$(dirname $0)/flatten-name-for-web-mp3"
 DESTINATION=audio
@@ -31,11 +30,7 @@ highest_local_tracknum() {
 remote_for_local() {
 	local _tracknum
 	_tracknum="$1"; shift
-	if [ "${_tracknum}" -ge ${YOUTUBE_NONEXISTENT_TRACK} ]; then
-		echo $(expr 1 + ${_tracknum})
-	else
-		echo ${_tracknum}
-	fi
+	echo ${_tracknum}
 }
 
 download_remote_to_local() {
