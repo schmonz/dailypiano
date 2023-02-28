@@ -10,8 +10,10 @@ unset CDPATH
 # 4. Observe new web-named MP3 files in `audio/`
 # 5. `git add audio && git commit -m 'Add latest music.' && git push`
 
-YOUTUBE_PLAYLIST='https://youtube.com/playlist?list=PLkuryjnRFclQJqoIVpk9W9-eIRswejo-R'
-LOCALMUSIC_DIRECTORY="${HOME}/Music/iTunes/iTunes Music/Schleier, Amitai/Daily Piano Miniatures"
+#YOUTUBE_PLAYLIST='https://youtube.com/playlist?list=PLkuryjnRFclQJqoIVpk9W9-eIRswejo-R'
+#LOCALMUSIC_DIRECTORY="${HOME}/Music/iTunes/iTunes Music/Schleier, Amitai/Daily Piano Miniatures"
+YOUTUBE_PLAYLIST='https://www.youtube.com/playlist?list=PLkuryjnRFclTzNyap3TRgLtWxgQmbu5Am'
+LOCALMUSIC_DIRECTORY="${HOME}/Music/iTunes/iTunes Music/Schleier, Amitai/Weekly Piano Miniatures"
 WEB_RENAMER="$(pwd)/$(dirname $0)/flatten-name-for-web-mp3"
 DESTINATION=audio
 
@@ -59,9 +61,14 @@ composer_lookup() {
 		Bortkiewicz)	echo "Bortkevych, Serhiy Eduardovych"	;;
 		Bowen)		echo "Bowen, York"			;;
 		Catoire)	echo "Catoire, Georgy L'vovich"		;;
+		Debussy)	echo "Debussy, Claude"			;;
 		Grieg)		echo "Grieg, Edvard"			;;
+		MacDowell)	echo "MacDowell, Edward"		;;
 		Medtner)	echo "Medtner, Nikolai Karlovich"	;;
 		Mompou)		echo "Mompou, Federico"			;;
+		Mordasov)	echo "Mordasov, Nikolai"		;;
+		Moszkowski)	echo "Moszkowski, Moritz"		;;
+		Satie)		echo "Satie, Erik"			;;
 		Schumann)	echo "Schumann, Robert"			;;
 		Scriabin)	echo "Scriabin, Alexander Nikolayevich"	;;
 		*)		echo >&2 "ERROR: add '${_composer_surname}'"
@@ -79,7 +86,7 @@ tag_new_mp3() {
 		--track "${_tracknum}" \
 		--TCOM "${_composer_fullname}" \
 		--artist "Schleier, Amitai" \
-		--album "Daily Piano Miniatures" \
+		--album "Weekly Piano Miniatures" \
 		--genre "32" \
 		--year "2022" \
 		"${_filename}"
