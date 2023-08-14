@@ -60,6 +60,7 @@ composer_lookup() {
 		Alkan)		echo "Alkan, Charles-Valentin"		;;
 		Bortkiewicz)	echo "Bortkevych, Serhiy Eduardovych"	;;
 		Bowen)		echo "Bowen, York"			;;
+		Brahms)		echo "Brahms, Johannes"			;;
 		Catoire)	echo "Catoire, Georgy L'vovich"		;;
 		Debussy)	echo "Debussy, Claude"			;;
 		Grieg)		echo "Grieg, Edvard"			;;
@@ -69,6 +70,7 @@ composer_lookup() {
 		Mordasov)	echo "Mordasov, Nikolai"		;;
 		Moszkowski)	echo "Moszkowski, Moritz"		;;
 		Satie)		echo "Satie, Erik"			;;
+		Schleier)	echo "Schleier, Amitai"			;;
 		Schumann)	echo "Schumann, Robert"			;;
 		Scriabin)	echo "Scriabin, Alexander Nikolayevich"	;;
 		*)		echo >&2 "ERROR: add '${_composer_surname}'"
